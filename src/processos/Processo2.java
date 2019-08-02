@@ -14,7 +14,6 @@ public class Processo2 {
 	 	DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 	 	
 	 	System.out.println("enter()");
-	 	out.writeBoolean(true);
 	 	
 	 	
 	 	while(true) {
@@ -24,18 +23,14 @@ public class Processo2 {
 		 	System.out.println("Resposta recebida: "+ conn);
 		 	
 		 	if(conn) {
+		 		
 		 		System.out.println("Sessão critica liberada");
 		 		System.out.println("resourceAccesses()");
 		 		System.out.println("Acessando o recurso compartilhado");
 		 		
 		 		
-		 		String x = "15";
-		 		String y = "3";
-		 		
-		 		System.out.println("Enviou " + x);
-		 		out.writeUTF(x);
-		 		System.out.println("Enviou " + y);
-		 		out.writeUTF(y);
+		 		out.writeUTF("Escrita do processo 2");
+		 		System.out.println("Enviou mensagem a ser escrita no arquivo");
 		 		
 		 		String result = in.readUTF();
 		 		System.out.println("Resultado: " + result);

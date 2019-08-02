@@ -2,7 +2,9 @@ package coordenador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
@@ -28,20 +30,21 @@ public class Executor implements Runnable{
 		 
 		 
 		 try {
-			 
+			 System.out.println("INICIOU EXECUTOR");
 			 this.out.writeBoolean(true);
 			 
-			 int x = this.in.readInt();
-			 int y = this.in.readInt();
+			 String mensagem = this.in.readUTF();
 			 
+			 //----
+			 // Sessão critica, gravando no arquivo
+			 FileWriter arq = new FileWriter("arquivoCompartilhado.txt", true);
+			 PrintWriter gravarArq = new PrintWriter(arq);
+			 gravarArq.println(mensagem);
+			 arq.close();
+			 //----
 			 
-			 System.out.println("X: " + x);
-			 System.out.println("Y: " + y);
-			 int result = multi(x, y);
-			 System.out.println("RESULTADO: " + result);
 			 TimeUnit.SECONDS.sleep(10);
-			 
-			 this.out.writeUTF(Integer.toString(result));
+			 this.out.writeUTF("Escrita concluida");
 			 
 			 this.in.close();
 			 this.out.close();
@@ -56,8 +59,4 @@ public class Executor implements Runnable{
 		 
 	 }
 	 
-	 
-	 private int multi(int x, int y) {
-		return x * y;
-	 }
 }

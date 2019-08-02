@@ -1,0 +1,2 @@
+Escrita do processo 1
+Escrita do processo 2

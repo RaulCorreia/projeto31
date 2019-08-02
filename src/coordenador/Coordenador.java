@@ -1,14 +1,9 @@
 package coordenador;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 
@@ -35,9 +30,8 @@ public class Coordenador implements MyCallBack{
 		System.out.println("Conexão adicionada a fila");
 		processos.add(socket);
 		
-		DataOutputStream out2 = new DataOutputStream(socket.getOutputStream());
-		
 		if(processos.size() > 1) {
+			DataOutputStream out2 = new DataOutputStream(socket.getOutputStream());
 			out2.writeBoolean(false);
 		} 
 		

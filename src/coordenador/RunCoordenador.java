@@ -21,10 +21,10 @@ public class RunCoordenador {
 	        Socket socket = socketServidor.accept();
 	        coord.addSocket(socket);
 	        
-//	        count++;
-//	        if(count == 2) {
+	        count++;
+	        if(count == 2) {
 	        	coord.runProcess();
-//	        }
+	        }
 	        
 	        
         }
