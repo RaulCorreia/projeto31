@@ -33,6 +33,7 @@ public class Process3 implements MyCallBack2{
         
         
         this.teclado = new Scanner(System.in);
+        System.out.println("Processo " + this.assinatura + " pronto.");
 	}
 	
 	public void menu() {
@@ -41,28 +42,29 @@ public class Process3 implements MyCallBack2{
     	
     	if(option.equalsIgnoreCase("Sim")) {
     		sendCast("presentation");
-    	} else {
-    		
-    		while(true) {
-    			
-    			System.out.println("Iniciar comunicação (sem) falha ou (com) falha?");
-    			option = teclado.nextLine();
-    			
-    			if(option.equalsIgnoreCase("sem")) {
-    				
-    				System.out.println("Quanto é 2 + 2: ");
-    				sendCast("sem");
-    				
-    			} else {
-    				
-    				System.out.println("Quanto é 2 + 2: ");
-    				sendCast("com");
-    			}
-    			
-    		}
-    		
-    		
     	}
+    	
+    		
+		while(true) {
+			
+			System.out.println("Iniciar comunicação (sem) falha ou (com) falha?");
+			option = teclado.nextLine();
+			
+			if(option.equalsIgnoreCase("sem")) {
+				
+				System.out.println("Quanto é 2 + 2: ");
+				sendCast("sem");
+				
+			} else {
+				
+				System.out.println("Quanto é 2 + 2: ");
+				sendCast("com");
+			}
+			
+		}
+    		
+    		
+    	
     }
 	
 	
@@ -91,7 +93,7 @@ public class Process3 implements MyCallBack2{
 		protected InetAddress group;
 	    protected byte[] buf = new byte[256];
 	    protected String sign;
-	    protected Map<String, String> processos;
+	    protected Map<String, Integer> processos;
 	    
 	    protected MyCallBack2 callback;
 	    
@@ -130,13 +132,13 @@ public class Process3 implements MyCallBack2{
 		                	
 		            	   System.out.println("Se aprezente...");
 		                	// Recebeu msg para se apresentar, ja adiciona quem enviou a lista
-		                	this.processos.put(split[1], split[1]);
+		                	this.processos.put(split[1], 0);
 		                	callback.callBackRetorno(split[0]+",");
 		                	
 		                } else if("myname".equalsIgnoreCase(split[0])) {
 		                	
 		                	System.out.println("Processo: " + split[1] + " se apresentou.");
-		                	this.processos.put(split[1], split[1]);
+		                	this.processos.put(split[1], 0);
 		                	
 		                } else if("exclude".equalsIgnoreCase(split[0])) {
 		                	
@@ -147,23 +149,6 @@ public class Process3 implements MyCallBack2{
 	                		} else {
 	                			System.out.println("Processo: " + split[1] + " foi excluido do grupo.");
 	                		}
-		                	
-//		                	boolean exclude = true;
-//		                	for(int i = 1; i < split.length; i++) {
-//		                		
-//		                		// Se tiver o nome na lista, se mantem
-//		                		// se nao encontrar o nome na lista sai do grupo
-//		                		if(split[i].equalsIgnoreCase(this.sign)) {
-//		                			exclude = false;
-//		                			break;
-//		                		}
-//		                		
-//		                	}
-		                	
-		                	// Nao encontrou o nome na lista finaliza o processo
-//		                	if(exclude) {
-//		                		break;
-//		                	}
 		                	
 		                } else if ("sem".equalsIgnoreCase(split[0])){
 		                	
@@ -196,8 +181,22 @@ public class Process3 implements MyCallBack2{
 		                			
 		                			System.out.println("Processo de id: " + split[1] + " respondeu: " + teste[1]);
 		                			System.out.println("Aparentemente o processo esta com problemas, sera rmeovido do grupo");
-		                			callback.callBackRetorno("end," + split[1]);
+		                			callback.callBackRetorno("voteTerminate," + split[1]);
 		                			
+		                			
+		                		}
+		                		
+		                	} else if ("voteTerminate".equalsIgnoreCase(teste[0])) {
+		                		
+		                		System.out.println("Votação para finalizar o processo: " + teste[1] + " recebida");
+		                		
+		                		// Armazena a votação
+		                		int vote = processos.get(teste[1]) + 1;
+		                		processos.put(teste[1], vote);
+		                		
+		                		if(vote >= 2) {
+		                			callback.callBackRetorno("terminate," + teste[1]);
+		                			processos.put(teste[1], 0);
 		                		}
 		                		
 		                	}
@@ -244,9 +243,14 @@ public class Process3 implements MyCallBack2{
 				System.out.println("Enviando resposta 3");
 				sendCast("respCom@3");
 				
-			} else if(opcao[0].equalsIgnoreCase("end")) {
+			} else if(opcao[0].equalsIgnoreCase("voteTerminate")) {
 				
-				System.out.println("Excluir processo: " + opcao[1]);
+				System.out.println("Votação terminar o processo: " + opcao[1]);
+				sendCast("voteTerminate@"+opcao[1]);
+				
+			} else if(opcao[0].equalsIgnoreCase("terminate")) {
+				
+				System.out.println("Excluir processo por votação: " + opcao[1]);
 				sendCast("exclude!"+opcao[1]);
 				
 			}
