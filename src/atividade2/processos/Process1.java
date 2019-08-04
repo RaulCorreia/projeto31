@@ -8,6 +8,8 @@ import java.net.MulticastSocket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Process1 implements MyCallBack2{
 
@@ -31,8 +33,13 @@ public class Process1 implements MyCallBack2{
         Thread t = new Thread(multicast);
         t.start();
         
+        // Verificar quem esta ativo a cada 2 segundos
+//        Timer timer = new Timer();
+//        timer.schedule(new RemindTask(), 2000);
+        
         
         this.teclado = new Scanner(System.in);
+        
         menu();
 	}
 	
@@ -256,5 +263,13 @@ public class Process1 implements MyCallBack2{
 		}
 		
 	}
+	
+	
+	
+//	class RemindTask extends TimerTask {
+//        public void run() {
+//            System.out.println("Verificação por 2 segundos quem ainda esta");
+//        }
+//    }
 
 }
